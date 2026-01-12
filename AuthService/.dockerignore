@@ -1,0 +1,23 @@
+# Logs
+logs
+*.log
+
+# Environment files
+# .env
+# .env.*.local
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Git files
+.git
+.gitignore
+
+# Editor/IDE config
+.vscode
+.idea
+
+# Optional: Docker-related
+Dockerfile.dev
+docker-compose*.yml

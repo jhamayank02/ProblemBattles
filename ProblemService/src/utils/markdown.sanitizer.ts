@@ -1,0 +1,35 @@
+import logger from "../config/logger.config";
+import sanitizeHtml from "sanitize-html";
+import TurndownService from "turndown";
+import MarkdownIt from "markdown-it";
+
+export async function sanitizeMarkdown(markdown: string): Promise<string> {
+    if (!markdown || typeof markdown !== "string") {
+        throw new Error("Markdown input is required");
+    }
+
+    try {
+        const md = new MarkdownIt();
+        const convertedHtml = md.render(markdown);
+        const sanitizedHtml = sanitizeHtml(convertedHtml, {
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img", "pre", "code"]),
+            allowedAttributes: {
+                ...sanitizeHtml.defaults.allowedAttributes,
+                "img": ["src", "alt", "title"],
+                "code": ["class"],
+                "pre": ["class"],
+                "a": ["href", "target"]
+            },
+            allowedSchemes: ["http", "https"],
+            allowedSchemesByTag: {
+                "img": ["http", "https"]
+            }
+        });
+
+        const tds = new TurndownService();
+        return tds.turndown(sanitizedHtml);
+    } catch (error) {
+        logger.error("Error sanitizing the markdown", error);
+        throw error;
+    }
+}

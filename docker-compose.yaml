@@ -1,0 +1,95 @@
+services:
+
+  redis_stack:
+    image: 'redis/redis-stack:7.4.0-v8'
+    ports:
+      - "6379:6379" # Redis
+      - "8001:8001" # UI
+
+  mysql_db:
+    image: mysql:8.1
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: problem_battles_auth_db
+    ports:
+      - "3307:3306"
+    volumes:
+    - mysqldata:/var/lib/mysql
+  
+  mongo_db:
+    image: 'mongo:6.0.27'
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+  
+  auth_service:
+    container_name: "auth-service"
+    build:
+      context: ./AuthService
+      dockerfile: Dockerfile
+    env_file:
+      - ./AuthService/.env
+    ports:
+      - "3004:3004"
+    depends_on:
+      - redis_stack
+      - mysql_db
+
+  problem_service:
+    container_name: "problem-service"
+    build:
+      context: ./ProblemService
+      dockerfile: Dockerfile
+    env_file:
+      - ./ProblemService/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth_service
+      - mongo_db
+
+  submission_service:
+    container_name: "submission-service"
+    build:
+      context: ./SubmissionService
+      dockerfile: Dockerfile
+    env_file:
+      - ./SubmissionService/.env
+    ports:
+      - "3002:3002"
+    depends_on:
+      - redis_stack
+      - auth_service
+      - mongo_db
+
+  evaluation_service:
+    container_name: "evaluation-service"
+    build:
+      context: ./EvaluationService
+      dockerfile: Dockerfile
+    env_file:
+      - ./EvaluationService/.env
+    ports:
+      - "3003:3003"
+    depends_on:
+      - redis_stack
+      - auth_service
+      - submission_service
+
+  client_ui:
+    container_name: "client-ui"
+    build:
+      context: ./ClientUI
+      dockerfile: Dockerfile
+    env_file:
+      - ./ClientUI/.env
+    ports:
+      - "3005:3005"
+
+volumes:
+  mysqldata:
+  mongodata:

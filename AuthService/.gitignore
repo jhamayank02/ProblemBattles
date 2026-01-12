@@ -1,0 +1,49 @@
+# ===============================
+# Go binaries & build artifacts
+# ===============================
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.a
+
+# Build output folders
+bin/
+build/
+dist/
+
+# Go workspace file (Go 1.18+)
+go.work
+go.work.sum
+
+# ===============================
+# Dependency & vendor
+# ===============================
+vendor/
+
+# ===============================
+# Coverage & profiling
+# ===============================
+coverage.out
+coverage.html
+*.cover
+*.pprof
+
+# ===============================
+# Logs & runtime files
+# ===============================
+*.log
+tmp/
+temp/
+
+# ===============================
+# Environment variables
+# ===============================
+.env
+.env.*
+!.env.example
+
+# ========
