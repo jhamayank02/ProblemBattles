@@ -31,6 +31,10 @@ The project follows a **service-oriented architecture**, making it scalable, mai
 └── README.md
 ```
 
+## 🏗️ Arhitecture
+
+<img width="1570" height="818" alt="Screenshot 2026-01-13 000415" src="https://github.com/user-attachments/assets/64de1806-585c-4bab-8c8c-d9693e6584bf" />
+
 ## 🔐 AuthService (Golang)
 
 Responsible for **user authentication and session management**.
